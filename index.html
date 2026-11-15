@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>AI API Cost &amp; Freelance Rate Calculator — Nomad Number Lab</title>
+<meta name="description" content="Free calculators for remote work: compare GPT-6, Claude and Gemini token costs per month, turn a take-home target into an hourly rate, and find timezone overlap." />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://sdn6517-cmd.github.io/global-nomad-calc/" />
+<meta name="theme-color" content="#12325f" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Nomad Number Lab" />
+<meta property="og:title" content="AI API Cost &amp; Freelance Rate Calculator" />
+<meta property="og:description" content="What your AI stack really costs per month, what your hour is really worth, and when your global team can actually meet." />
+<meta property="og:url" content="https://sdn6517-cmd.github.io/global-nomad-calc/" />
+<meta property="og:image" content="https://sdn6517-cmd.github.io/global-nomad-calc/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="AI API Cost &amp; Freelance Rate Calculator" />
+<meta name="twitter:description" content="Token costs, hourly rates and timezone overlap for people who work from anywhere." />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='8'%20fill='%2312325f'/%3E%3Cpath%20d='M8%2022V10h3l5%207%205-7h3v12h-3v-7l-5%206-5-6v7z'%20fill='%23fff'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Nomad Number Lab",
+      "url": "https://sdn6517-cmd.github.io/global-nomad-calc/",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any",
+      "inLanguage": "en",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Three calculators for remote and freelance work: AI API token cost comparison, freelance hourly rate from a take-home target, and a timezone overlap finder."
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How accurate are the AI API prices on this page?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Every price is the vendor's published list price in USD per million tokens, checked on 15 November 2026 and shown on the page next to the model. Vendors change prices without notice — several of the models listed here have announced increases (Gemini 4 Argon moves to $4/$20 on 1 December 2026, Gemini 3.8 Flash to $1.50/$7.50 on 1 January 2027) and GPT-5 is deprecated on 11 December 2026. Treat the output as a planning estimate, not an invoice." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does prompt caching change the bill so much?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A cached input token is typically billed at 10% of a fresh one — $0.10 instead of $1.00 per million tokens on Claude Sonnet 5.5, for example. If a long system prompt or a document is reused on every request, most of the input can be a cache read, and the input half of your bill drops by roughly 90%." }
+        },
+        {
+          "@type": "Question",
+          "name": "Are reasoning tokens billed as output?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes on every provider listed here. Thinking tokens are generated tokens, so they are charged at the output rate even when the visible answer is short. A model with a low output price but long internal reasoning can therefore cost more than its headline rate suggests." }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I charge hourly or per project?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Quote hourly when the scope is unclear and per project when it is not. In both cases the hourly figure from the second calculator is the floor: multiply it by the hours you honestly expect, then add a buffer for revisions. A project quote built on your unknown rate is a guess; a project quote built on a known hourly rate is a decision." }
+        },
+        {
+          "@type": "Question",
+          "name": "How many billable hours should a freelancer plan per week?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Most solo consultants bill 20 to 30 hours in a 40-hour week; the rest goes to sales, admin, invoicing and learning. If you plan 40 billable hours you are planning for no sales calls and no holidays, and you will miss the target you were aiming at." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I run a recurring meeting across eight timezones?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Pick the window where the most people are inside 09:00–18:00, then rotate the awkward hour between the two teams it hurts, so nobody owns every 07:00 call. Keep the agenda written in the calendar invite so the meeting is worth the hour, and move everything that does not need a live decision to asynchronous notes." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do these calculators send my numbers anywhere?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. All three calculators run in your browser with plain JavaScript. Inputs stay in the page and in the URL you see, and nothing is uploaded. The page carries advertising slots, and the advertising provider may set cookies — see the privacy page for details." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="js-loading">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="index.html" aria-label="Nomad Number Lab home">
+      <span class="brand-mark" aria-hidden="true">N</span>
+      <span>Nomad Number Lab<small>pricing · rates · timezones</small></span>
+    </a>
+    <nav class="header-nav" aria-label="Main">
+      <a href="#calculators">Calculators</a>
+      <a href="#guides">Guides</a>
+      <a href="#faq">FAQ</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero wrap">
+    <p class="eyebrow">For freelancers, small SaaS teams and remote-first companies</p>
+    <h1>The three numbers nobody tells you before you go independent</h1>
+    <p class="lede">What your AI stack costs per month. What your working hour is really worth once tax and dead time are counted. And which hour — if any — Seoul, San Francisco, London and Singapore can all attend. All three run in the browser, with the prices and formulas in plain sight.</p>
+    <p class="hero-meta">Prices checked <time datetime="2026-11-15">15 November 2026</time> · No sign-up · Nothing leaves your browser</p>
+  </section>
+
+  <div class="ad-slot" id="ad-slot-top" aria-label="Advertisement">
+    <div class="ad-inner">
+      <span class="ad-label">Advertisement</span>
+      <!-- AdSense: paste the responsive <ins class="adsbygoogle"> unit here after approval. -->
+      <span class="ad-placeholder">Ad space — 970×90 leaderboard / mobile banner</span>
+    </div>
+  </div>
+
+  <section id="calculators" class="wrap">
+    <div class="tabs" role="tablist" aria-label="Calculators">
+      <button role="tab" id="tab-ai" data-tab="ai" aria-selected="true" aria-controls="panel-ai" class="is-active">
+        <span class="tab-num">01</span> AI API cost
+      </button>
+      <button role="tab" id="tab-rate" data-tab="rate" aria-selected="false" aria-controls="panel-rate" tabindex="-1">
+        <span class="tab-num">02</span> Freelance rate
+      </button>
+      <button role="tab" id="tab-tz" data-tab="tz" aria-selected="false" aria-controls="panel-tz" tabindex="-1">
+        <span class="tab-num">03</span> Timezone overlap
+      </button>
+    </div>
+
+    <!-- ============================ TAB 1 ============================ -->
+    <div role="tabpanel" id="panel-ai" aria-labelledby="tab-ai" tabindex="0">
+      <div class="panel-head">
+        <h2>AI API &amp; token cost calculator</h2>
+        <p>Describe one prompt and how often your team sends it. The table prices that same workload on every current model — GPT-6 Astra, GPT-5.2, Claude Opus 5.5, Sonnet 5.5, Haiku 5.5, Gemini 4 Argon, Gemini 3.8 Flash and the cheap tiers — so the gap between "we picked the best model" and "we picked the right model" shows up in dollars.</p>
+      </div>
+
+      <form class="calc" id="ai-form" onsubmit="return false">
+        <div class="field-grid">
+          <label class="field">
+            <span>Input tokens per prompt</span>
+            <input id="ai-in" type="number" min="0" max="2000000" step="100" value="1500" inputmode="numeric" />
+            <small>System prompt + user message + retrieved documents.</small>
+          </label>
+          <label class="field">
+            <span>Output tokens per prompt</span>
+            <input id="ai-out" type="number" min="0" max="2000000" step="50" value="500" inputmode="numeric" />
+            <small>Answer length, including reasoning tokens.</small>
+          </label>
+          <label class="field">
+            <span>Prompts per seat per day</span>
+            <input id="ai-prompts" type="number" min="0" max="100000" step="1" value="30" inputmode="numeric" />
+            <small>A chat message, an agent step, a classification call.</small>
+          </label>
+          <label class="field">
+            <span>Seats</span>
+            <input id="ai-team" type="number" min="0" max="100000" step="1" value="5" inputmode="numeric" />
+            <small>People or API keys sharing the bill.</small>
+          </label>
+          <label class="field">
+            <span>Working days per month</span>
+            <input id="ai-days" type="number" min="0" max="31" step="1" value="22" inputmode="numeric" />
+            <small>Weekdays in an average month.</small>
+          </label>
+          <label class="field field-range">
+            <span>Input served from cache</span>
+            <input id="ai-cache" type="range" min="0" max="95" step="5" value="0" />
+            <small id="ai-cache-label">0% of input read from cache</small>
+          </label>
+        </div>
+      </form>
+
+      <div class="result" id="ai-headline" aria-live="polite"></div>
+      <p class="fineprint" id="ai-spread"></p>
+
+      <div class="vendor-filter" role="group" aria-label="Filter by vendor">
+        <button type="button" data-vendor="all" class="is-active">All</button>
+        <button type="button" data-vendor="OpenAI">OpenAI</button>
+        <button type="button" data-vendor="Anthropic">Anthropic</button>
+        <button type="button" data-vendor="Google">Google</button>
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table" id="ai-table">
+          <caption class="visually-hidden">Monthly cost of the same prompt workload on each model</caption>
+          <thead>
+            <tr>
+              <th scope="col">Model</th>
+              <th scope="col">In / Out $ per 1M</th>
+              <th scope="col">Per prompt</th>
+              <th scope="col">Per seat / mo</th>
+              <th scope="col">Team / mo</th>
+              <th scope="col">vs cheapest</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="fineprint">Standard list prices, no batch discount. <span id="ai-tokens"></span> · <span id="ai-prompts-month"></span>. Batch and flex tiers are usually 50% off; a "fast" or "priority" tier is usually double.</p>
+
+      <div class="ad-slot ad-infeed" id="ad-slot-infeed" aria-label="Advertisement">
+        <div class="ad-inner">
+          <span class="ad-label">Advertisement</span>
+          <!-- AdSense: in-feed unit. -->
+          <span class="ad-placeholder">Ad space — in-article / in-feed</span>
+        </div>
+      </div>
+
+      <article class="prose" id="guide-ai">
+        <h2>What actually decides your AI bill</h2>
+        <p>Two teams can send the same 10,000 prompts a day and pay a bill a hundred times apart without either of them being wrong. The difference is never the "best model" headline — it is five levers, in this order of impact.</p>
+
+        <h3>1. Output tokens cost five to ten times input tokens</h3>
+        <p>Every vendor prices generated tokens far above read tokens, because generation is the expensive part of inference. On GPT-6 Astra one million output tokens cost $50 against $10 for input; on Sonnet 5.5 it is $10 against $2. That asymmetry means the cheapest optimisation is almost always <em>shorter answers</em>: a 200-token cap instead of 800 cuts the bigger half of the bill by 75%, and users rarely notice.</p>
+
+        <h3>2. A cached input token is billed at about a tenth</h3>
+        <p>Prompt caching stores the prefix of a request — a long system prompt, a policy document, a few hundred rows of context — and charges a cache-read price on the next call. On Sonnet 5.5 that is $0.10 instead of $2.00 per million tokens. If 80% of a 1,500-token prompt is a stable prefix, moving the cache slider on this page from 0% to 80% typically removes two-thirds of the input side of the bill. The catch: a cache write costs 1.25× a normal input token, so caching only pays when the same prefix is reused, not once.</p>
+
+        <h3>3. Reasoning tokens are output tokens</h3>
+        <p>A reasoning model that "thinks" for 3,000 tokens before a 300-token answer is billed for 3,300 output tokens. This is why a model with a mid-range price can lose to a cheaper one on real traffic, and why effort settings exist: dropping from high to medium reasoning effort often halves the bill with no visible change in answer quality for extraction and routing tasks.</p>
+
+        <h3>4. Context length can trigger a different price list</h3>
+        <p>Several models change price at a context threshold rather than charging linearly: GPT-6 Astra bills 2× input and 1.5× output for requests above 272K tokens; Gemini 4 Argon and Gemini 3.1 Pro step up above 200K; Claude Haiku 5.5 jumps from $0.10 to $0.50 per million input tokens once a prompt passes 100K. Pasting a whole PDF into a prompt is exactly the move that trips these thresholds.</p>
+
+        <h3>5. Traffic shape decides whether batch applies</h3>
+        <p>Anything that does not need an answer in the next minute — nightly enrichment, backfills, evaluation runs, tagging — can usually go through a batch or flex tier at 50% off. For a team whose prompts are half interactive and half background, splitting the two workloads is a straight 25% cut with no product change.</p>
+
+        <h3>A worked example</h3>
+        <p>A product with 1,000 active users sends 90,000 prompts a month — three per user a day, 1,500 input and 500 output tokens each. That is 135 million input tokens and 45 million output tokens every month. On GPT-6 Astra at list price the bill is <strong>$3,600 a month</strong>. The same workload on Claude Sonnet 5.5 is <strong>$720</strong>, and on Gemini 3.8 Flash at its current introductory rate it is <strong>$270</strong>. Identical traffic, 13× difference. None of these numbers says which model is good enough for your task — but seeing the spread is what turns the choice from an accident into a decision.</p>
+      </article>
+    </div>
+
+    <!-- ============================ TAB 2 ============================ -->
+    <div role="tabpanel" id="panel-rate" aria-labelledby="tab-rate" tabindex="0" hidden>
+      <div class="panel-head">
+        <h2>Freelance &amp; remote hourly rate calculator</h2>
+        <p>Start from the money you want to keep, not the rate you dare to ask. This calculator adds back tax and business costs, divides by the hours you can genuinely bill, and gives you the hourly, day, week, month and project numbers to quote.</p>
+      </div>
+
+      <form class="calc" id="rate-form" onsubmit="return false">
+        <div class="field-grid">
+          <label class="field">
+            <span>Take-home target per year (USD)</span>
+            <input id="rate-target" type="number" min="0" step="1000" value="90000" inputmode="numeric" />
+            <small>What has to land in your account after tax.</small>
+          </label>
+          <label class="field">
+            <span>Tax + social contributions (%)</span>
+            <input id="rate-tax" type="number" min="0" max="95" step="1" value="25" inputmode="numeric" />
+            <small>Self-employment tax plus income tax where you live.</small>
+          </label>
+          <label class="field">
+            <span>Business costs (% of revenue)</span>
+            <input id="rate-buffer" type="number" min="0" max="90" step="1" value="10" inputmode="numeric" />
+            <small>Software, hardware, insurance, accountant, unpaid leave.</small>
+          </label>
+          <label class="field">
+            <span>Billable hours per week</span>
+            <input id="rate-hours" type="number" min="0" max="80" step="1" value="25" inputmode="numeric" />
+            <small>Hours a client pays for — not hours at the desk.</small>
+          </label>
+          <label class="field">
+            <span>Weeks off per year</span>
+            <input id="rate-weeks" type="number" min="0" max="52" step="1" value="4" inputmode="numeric" />
+            <small>Holidays, sick days, slow months.</small>
+          </label>
+          <label class="field">
+            <span>Hours in your working day</span>
+            <input id="rate-day" type="number" min="1" max="16" step="1" value="8" inputmode="numeric" />
+            <small>Used for the day rate.</small>
+          </label>
+          <label class="field">
+            <span>Project size (hours)</span>
+            <input id="rate-project" type="number" min="0" max="5000" step="1" value="40" inputmode="numeric" />
+            <small>For a fixed-price quote.</small>
+          </label>
+        </div>
+        <p class="fineprint" id="rate-hours-note"></p>
+      </form>
+
+      <div class="result" id="rate-result" aria-live="polite"></div>
+
+      <div class="ad-slot ad-infeed" id="ad-slot-infeed-rate" aria-label="Advertisement">
+        <div class="ad-inner">
+          <span class="ad-label">Advertisement</span>
+          <!-- AdSense: in-feed unit. -->
+          <span class="ad-placeholder">Ad space — in-article</span>
+        </div>
+      </div>
+
+      <article class="prose" id="guide-rate">
+        <h2>Why "I want $90k, so I charge $45/hour" fails</h2>
+        <p>Dividing a target by 2,000 hours assumes you bill every working hour of the year, that tax is not a thing, and that running a business is free. All three assumptions are wrong in the same direction, and together they usually underprice an independent worker by 40–60%.</p>
+
+        <h3>The three deductions people forget</h3>
+        <ul>
+          <li><strong>Tax and social contributions.</strong> As an employee your employer pays part of this for you. Once you invoice directly, the gross-to-net gap is yours: 25–45% depending on where you live and how you structure the work.</li>
+          <li><strong>Business costs.</strong> Laptop, software, a share of rent and power, insurance, an accountant, payment fees, and the cost of the weeks you do not work. Ten to twenty percent of revenue is a realistic range for a solo consultant.</li>
+          <li><strong>Non-billable time.</strong> Nobody pays for proposals, invoices, sales calls, bookkeeping, or the hour you spend learning the tool the client uses. Twenty-five billable hours in a 40-hour week is normal; forty is a business with no sales pipeline.</li>
+        </ul>
+
+        <h3>What the numbers look like</h3>
+        <p>A $90,000 take-home target at a 25% tax rate needs $120,000 of gross profit. With business costs at 10% of revenue, you must invoice $133,333. At 25 billable hours across 48 weeks — 1,200 hours — the rate is <strong>$111 per hour</strong>. The same target priced at "$45 an hour" delivers roughly $36,000 of take-home, not $90,000. That gap is why experienced freelancers seem expensive on paper and still feel squeezed at the end of the year.</p>
+
+        <h3>Quoting a project without regret</h3>
+        <ol>
+          <li><strong>Estimate the hours honestly</strong>, then add 20% for the revision rounds you always end up doing.</li>
+          <li><strong>Multiply by the hourly rate</strong> from this page. If the number feels too high for the client, the scope is too large — cut scope, not rate.</li>
+          <li><strong>Name the revision rounds</strong> (two is a fair default) and price extra rounds at the same hourly rate.</li>
+          <li><strong>Take a deposit</strong> — 30–50% is normal — and set the final payment before handover, not after.</li>
+          <li><strong>Write a kill fee</strong>: if the client cancels mid-project, you keep the deposit and bill the hours already worked.</li>
+        </ol>
+
+        <h3>When to charge by the day instead</h3>
+        <p>Day rates work when the work is collaborative and hard to bound — workshops, audits, on-site consulting. A day rate of six to eight times the hourly rate is the usual convention, and this calculator shows both, so you can check that your day rate is not quietly becoming a discount for clients who book you in blocks.</p>
+      </article>
+    </div>
+
+    <!-- ============================ TAB 3 ============================ -->
+    <div role="tabpanel" id="panel-tz" aria-labelledby="tab-tz" tabindex="0" hidden>
+      <div class="panel-head">
+        <h2>Global team meeting &amp; overlap finder</h2>
+        <p>Pick your city and your colleagues'. The grid shows every hour of your day in their local time, marks the hours that fall inside working hours for everyone, and names the longest window you can actually book. Daylight saving is applied for the date you choose, so the answer in July is not the answer in January.</p>
+      </div>
+
+      <form class="calc" id="tz-form" onsubmit="return false">
+        <div class="field-grid">
+          <label class="field">
+            <span>Your city</span>
+            <select id="tz-home"></select>
+          </label>
+          <label class="field">
+            <span>Date</span>
+            <input id="tz-date" type="date" />
+          </label>
+          <label class="field">
+            <span>Working hours start</span>
+            <input id="tz-start" type="number" min="0" max="23" step="1" value="9" inputmode="numeric" />
+            <small>Local time in each city.</small>
+          </label>
+          <label class="field">
+            <span>Working hours end</span>
+            <input id="tz-end" type="number" min="1" max="24" step="1" value="18" inputmode="numeric" />
+            <small>Exclusive — 18 means the last usable hour starts at 17:00.</small>
+          </label>
+          <label class="field">
+            <span>Team city 1</span>
+            <select class="tz-member" data-slot="0"></select>
+          </label>
+          <label class="field">
+            <span>Team city 2</span>
+            <select class="tz-member" data-slot="1"></select>
+          </label>
+          <label class="field">
+            <span>Team city 3</span>
+            <select class="tz-member" data-slot="2"></select>
+          </label>
+          <label class="field">
+            <span>Team city 4</span>
+            <select class="tz-member" data-slot="3"></select>
+          </label>
+          <label class="field">
+            <span>Team city 5</span>
+            <select class="tz-member" data-slot="4"></select>
+          </label>
+          <div class="field field-button">
+            <span>&nbsp;</span>
+            <button type="button" id="tz-add" class="ghost-button">Fill next empty city</button>
+            <small>Compare up to five colleagues at once.</small>
+          </div>
+        </div>
+      </form>
+
+      <div class="result" id="tz-result" aria-live="polite"></div>
+
+      <div class="ad-slot ad-infeed" id="ad-slot-infeed-tz" aria-label="Advertisement">
+        <div class="ad-inner">
+          <span class="ad-label">Advertisement</span>
+          <!-- AdSense: in-feed unit. -->
+          <span class="ad-placeholder">Ad space — in-article</span>
+        </div>
+      </div>
+
+      <article class="prose" id="guide-tz">
+        <h2>The meeting policy that survives eight timezones</h2>
+        <p>Timezone pain is rarely about arithmetic. Everyone can convert 15:00 Seoul to their own clock; the hard part is deciding whose evening pays for the meeting, every week, forever. Three rules keep a distributed team from quietly resenting the same three people.</p>
+
+        <h3>Rotate the awkward hour</h3>
+        <p>If Seoul and San Francisco need a weekly sync, someone is at 07:00 or 23:00. Alternate monthly. Written in the calendar as "odd months Seoul 07:00, even months San Francisco 08:00", the burden is visible and shared — which matters more than the hour itself.</p>
+
+        <h3>Use "all at work" as the default, not the rule</h3>
+        <p>The green rows on this page are hours when nobody is outside 09:00–18:00. Often there is exactly one, or none. When there is none, prefer moving the meeting to whoever's day it least disrupts and keeping it short, over finding a worse hour that technically fits everyone.</p>
+
+        <h3>Watch the two weeks around a clock change</h3>
+        <p>Most of the year, the Seoul–Berlin gap is eight hours; for the two weeks between Europe's last Sunday in March and the US second Sunday in March, it is seven or nine depending on which pair you are converting. Recurring meetings booked in January silently shift by an hour in March. Cells with a dotted border in the grid mark exactly those dates: a country's UTC offset changed during that hour.</p>
+
+        <h3>Make the meeting worth the hour it costs</h3>
+        <p>A meeting that pulls six people from four timezones costs six person-hours plus the context switching. Put the agenda and the pre-read in the invite, write down every decision in the shared document during the call, and move anything that is only a status update to asynchronous notes. The teams that handle timezones best meet less, and their calendars show it.</p>
+
+        <h3>Quick conversions worth memorising</h3>
+        <ul>
+          <li><strong>Seoul ↔ Tokyo</strong>: no gap. Same hour, no daylight saving in either country.</li>
+          <li><strong>Seoul ↔ Singapore / Bali</strong>: one hour. Seoul is always ahead; neither Singapore nor Bali changes clocks.</li>
+          <li><strong>Seoul ↔ London</strong>: eight hours most of the year, nine during the weeks when London is on summer time and Seoul is not (late March to late October).</li>
+          <li><strong>Seoul ↔ San Francisco</strong>: 17 hours — which means a 09:00 meeting in Seoul is 16:00 the previous day in California.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section id="guides" class="wrap prose">
+    <h2>How these numbers are built</h2>
+    <p>Every calculator on this page runs entirely in your browser. No input is sent anywhere, nothing is stored on a server, and the same URL reproduces the same numbers — the parameters live in the address bar, so you can bookmark a scenario or send it to a colleague.</p>
+    <p>AI prices are the vendors' own published list prices, checked on 15 November 2026 and printed next to each model. Freelance rates use a straightforward gross-up: take-home ÷ (1 − tax) ÷ (1 − business costs), divided by billable hours. Timezone offsets follow each country's published rules, including US, EU, Australian and New Zealand daylight saving, and are applied per hour rather than per day so that the transition week is handled correctly.</p>
+    <p>Full sources, formulas and the limits of each estimate are on the <a href="about.html">about page</a>.</p>
+  </section>
+
+  <section id="faq" class="wrap">
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>How accurate are the AI API prices?</summary>
+        <p>They are list prices per million tokens in USD, checked on 15 November 2026 and shown beside each model. Prices move: Gemini 4 Argon rises to $4/$20 on 1 December 2026, Gemini 3.8 Flash to $1.50/$7.50 on 1 January 2027, and GPT-5 is deprecated on 11 December 2026. A "fast" or "priority" tier is usually double the standard rate, and batch or flex tiers are usually half.</p>
+      </details>
+      <details>
+        <summary>Why is output so much more expensive than input?</summary>
+        <p>Reading a prompt can be parallelised across a GPU batch; generating tokens happens one token at a time. Vendors pass that cost difference on, typically charging five to ten times more per output token. It is the single strongest reason to keep answers short.</p>
+      </details>
+      <details>
+        <summary>Are reasoning tokens billed as output?</summary>
+        <p>Yes on every provider listed here. Thinking tokens are generated tokens, so they are charged at the output rate even when the visible answer is short. A model with a low output price but long internal reasoning can therefore cost more than its headline rate suggests — which is why effort settings matter more than the model name.</p>
+      </details>
+      <details>
+        <summary>Does prompt caching really cut 90% of the input bill?</summary>
+        <p>Cached input reads are usually 10% of the fresh input price — 2.5% on some newer models — so yes, for the cached share. The write itself costs about 1.25× a normal input token, which is why caching a prefix you use once is a loss and caching one you use a thousand times is a large win.</p>
+      </details>
+      <details>
+        <summary>Should I quote hourly or fixed price?</summary>
+        <p>Fixed price when the scope is genuinely clear and you have done the work before; hourly when it is not. Use the hourly number from the second calculator as the floor for both, and add a revision buffer before you say a fixed number out loud.</p>
+      </details>
+      <details>
+        <summary>What if there is no overlap at all?</summary>
+        <p>Then the team is not really synchronous. Pick the pair that must meet live, rotate the inconvenient hour, and move everything else to written updates. The grid will show zero green rows — that is information, not a failure of the tool.</p>
+      </details>
+      <details>
+        <summary>Do you store what I type?</summary>
+        <p>No. The calculators are plain JavaScript in the page. Your inputs only exist in the browser and in the query string of the URL you are looking at. See the <a href="privacy.html">privacy page</a> for the advertising cookies that third-party ad slots may set.</p>
+      </details>
+    </div>
+  </section>
+
+  <div class="ad-slot ad-bottom" id="ad-slot-bottom" aria-label="Advertisement">
+    <div class="ad-inner">
+      <span class="ad-label">Advertisement</span>
+      <!-- AdSense: paste the responsive unit here after approval. -->
+      <span class="ad-placeholder">Ad space — 728×90 / mobile banner</span>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <div>
+      <p class="footer-brand">Nomad Number Lab</p>
+      <p class="footer-note">Pricing, rates and timezones for people who work from anywhere. Prices checked 15 November 2026.</p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="about.html">About &amp; methodology</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="sitemap.xml">Sitemap</a>
+    </nav>
+    <p class="footer-copy">© <span id="year">2026</span> Nomad Number Lab · Estimates only, not financial or tax advice.</p>
+  </div>
+</footer>
+
+<script src="app.js" defer></script>
+</body>
+</html>

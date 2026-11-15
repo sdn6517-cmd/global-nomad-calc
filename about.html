@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>About &amp; Methodology — Nomad Number Lab</title>
+<meta name="description" content="Where the numbers come from: the vendor list prices behind the AI cost calculator, the formulas behind the freelance rate calculator, and the daylight-saving rules behind the timezone finder." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://sdn6517-cmd.github.io/global-nomad-calc/about.html" />
+<meta name="theme-color" content="#12325f" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='8'%20fill='%2312325f'/%3E%3Cpath%20d='M8%2022V10h3l5%207%205-7h3v12h-3v-7l-5%206-5-6v7z'%20fill='%23fff'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true">N</span>
+      <span>Nomad Number Lab<small>pricing · rates · timezones</small></span>
+    </a>
+    <nav class="header-nav" aria-label="Main">
+      <a href="index.html">Calculators</a>
+      <a href="index.html#guides">Guides</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap prose" style="margin-top:36px; margin-bottom:48px;">
+  <h1>About this site, and how every number is produced</h1>
+  <p>Nomad Number Lab exists because three questions come up in every independent working life, and all three are usually answered with a guess: <em>what will my AI bill be, what should I charge, and when can we actually meet?</em> Each calculator below states its inputs and its formula, so you can check the arithmetic instead of trusting a black box.</p>
+  <p>Everything runs client-side in plain JavaScript. There is no build step, no framework, no analytics, and no network request after the page loads.</p>
+
+  <h2>1. AI API &amp; token cost calculator</h2>
+  <p><strong>Source of the prices.</strong> Each model's list price was read from the vendor's own pricing page on <strong>15 November 2026</strong> and is printed next to the model in the results table, in US dollars per one million tokens, standard tier, short-context rate:</p>
+  <ul>
+    <li>OpenAI — <a href="https://developers.openai.com/api/docs/pricing" rel="nofollow noopener" target="_blank">developers.openai.com/api/docs/pricing</a> (GPT-6 Astra, GPT-6.1 Sol, GPT-5.2 family, GPT-5.1, GPT-5, GPT-5 mini and nano).</li>
+    <li>Anthropic — <a href="https://platform.claude.com/docs/en/about-claude/pricing" rel="nofollow noopener" target="_blank">platform.claude.com pricing</a> (Claude Fable 5.2, Opus 5.5 and 5, Sonnet 5.5 and 4.6, Haiku 5.5 and 4.5).</li>
+    <li>Google — <a href="https://ai.google.dev/gemini-api/docs/pricing" rel="nofollow noopener" target="_blank">ai.google.dev/gemini-api/docs/pricing</a> (Gemini 4 Argon, Gemini 3.8 Flash, Gemini 3.1 Pro, Gemini 3.1 Flash-Lite, Gemini 3 Flash).</li>
+  </ul>
+  <p><strong>Formula.</strong> For one prompt:</p>
+  <pre>cost = (input_tokens × (1 − cached_share) × input_price + input_tokens × cached_share × cached_price + output_tokens × output_price) ÷ 1,000,000</pre>
+  <p>Monthly team cost is <code>cost × prompts_per_day × working_days × seats</code>. The "vs cheapest" column divides each model's monthly cost by the cheapest one in the table.</p>
+  <p><strong>What the model does not include.</strong> Batch and flex tiers (usually 50% off), fast or priority tiers (usually 2×), long-context surcharges above a model's threshold, tool-call and search fees, prompt-cache storage fees, fine-tuning, embeddings, and traffic that is not shaped like "the same prompt repeated". Where a threshold changes the price, the caveat is printed in the row itself.</p>
+  <p><strong>Prices move.</strong> Three changes are already announced for the near future and are noted in the table: Gemini 4 Argon rises to $4 / $20 per million tokens on 1 December 2026; Gemini 3.8 Flash rises to $1.50 / $7.50 on 1 January 2027; GPT-5 is deprecated on 11 December 2026. Re-check before you commit a budget.</p>
+
+  <h2>2. Freelance hourly rate calculator</h2>
+  <p><strong>Formula.</strong> The rate is a gross-up from what you want to keep:</p>
+  <pre>gross_profit = take_home ÷ (1 − tax_rate)
+revenue      = gross_profit ÷ (1 − business_cost_rate)
+hourly       = revenue ÷ (billable_hours_per_week × (52 − weeks_off))
+day_rate     = hourly × hours_per_day
+project      = hourly × project_hours</pre>
+  <p>The tax rate covers income tax plus self-employment or social contributions in your jurisdiction; the business cost rate covers software, hardware, insurance, accounting, payment fees and unpaid leave. Both are inputs, not recommendations — a solo consultant in Korea, Germany and Singapore should not use the same numbers, and the defaults (25% and 10%) are a starting point, not a tax opinion.</p>
+  <p><strong>What it does not include.</strong> Pension contributions beyond the tax rate, VAT or GST you may have to add on top, income that arrives outside the billing system (royalties, affiliate income), and the ramp-up period when you have fewer hours sold than you planned.</p>
+
+  <h2>3. Timezone overlap finder</h2>
+  <p>Offsets come from published rules rather than from the browser's locale database, so the same date gives the same answer on every device:</p>
+  <ul>
+    <li><strong>United States and Canada:</strong> daylight saving from the second Sunday of March 02:00 to the first Sunday of November 02:00 local standard time.</li>
+    <li><strong>European Union and United Kingdom:</strong> from the last Sunday of March 01:00 UTC to the last Sunday of October 01:00 UTC.</li>
+    <li><strong>Australia:</strong> from the first Sunday of October to the first Sunday of April (southern-hemisphere summer).</li>
+    <li><strong>New Zealand:</strong> from the last Sunday of September to the first Sunday of April.</li>
+    <li><strong>British Columbia:</strong> permanent UTC−7 from 1 November 2026, when the province stopped falling back.</li>
+    <li><strong>Fixed-offset zones</strong> (Seoul, Tokyo, Singapore, Bali, Bangkok, Jakarta, Dubai, Bengaluru, Istanbul, Nairobi, Cape Town, São Paulo, Buenos Aires, Mexico City, Honolulu) have no daylight saving.</li>
+  </ul>
+  <p>The grid is rebuilt hour by hour for the chosen date, and each cell carries the offset in force at that instant, so the transition week is handled — and flagged — correctly. Offsets were verified against the IANA time-zone database for every listed city, every three hours across 2026–2027 (232,464 comparisons, no mismatches).</p>
+  <p><strong>Known limits.</strong> A city is represented by one zone; a country with several (Canada, Australia, Brazil, Indonesia) appears once per zone listed. Political changes to time zones after 2027 are not known in advance.</p>
+
+  <h2>How it is tested</h2>
+  <p>The calculation engines are pure functions, exported on a single object, and are tested independently of the page: 111 assertions cover the token-cost arithmetic, the gross-up and round-trip of the rate calculator, and the timezone rules and overlap grid. The page itself is checked for broken internal links, missing element ids, ad-slot wiring, structured-data validity and page weight. Anyone can re-run both suites from the repository.</p>
+
+  <h2>Who runs this</h2>
+  <p>Nomad Number Lab is an independent project, made by a person who needed these three numbers and could not find a page that showed its work. There is no company behind it, no consultancy to sell you, and no affiliate relationship with any model provider. When providers change prices, the table changes; corrections are welcome and are usually published within a day.</p>
+
+  <h2>Disclaimer</h2>
+  <p>Every figure on this site is an estimate. It is not financial advice, not tax advice, and not a quotation from any provider. Vendor prices, tax rules and time-zone politics change; your actual invoice, tax bill and meeting invite are authoritative. Use these calculators to ask better follow-up questions — of your accountant, your provider, and your calendar — not to replace them.</p>
+
+  <p class="fineprint">Corrections and questions: <a href="mailto:hello@nomadnumberlab.com">hello@nomadnumberlab.com</a>.</p>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <div>
+      <p class="footer-brand">Nomad Number Lab</p>
+      <p class="footer-note">Pricing, rates and timezones for people who work from anywhere.</p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="index.html">Calculators</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="sitemap.xml">Sitemap</a>
+    </nav>
+    <p class="footer-copy">© 2026 Nomad Number Lab · Estimates only, not financial or tax advice.</p>
+  </div>
+</footer>
+</body>
+</html>

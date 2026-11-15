@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Engine tests — Nomad Number Lab</title>
+<style>
+  body { font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: #0f1720; color: #d7e3f0; padding: 24px; }
+  h1 { font-size: 18px; }
+  pre { white-space: pre-wrap; background: #131e29; border-radius: 10px; padding: 16px; }
+  .pass { color: #57d9a3; } .fail { color: #ff8c7a; }
+</style>
+</head>
+<body>
+<h1>Nomad Number Lab — engine tests</h1>
+<p>This page runs the same assertions as <code>python3 tests/run.py</code>, in your browser.</p>
+<pre id="out">running…</pre>
+<script>
+  var out = document.getElementById('out');
+  var lines = [];
+  out.textContent = '';
+  console.log = function (msg) {
+    var s = String(msg);
+    lines.push(s);
+    var span = document.createElement('span');
+    if (s.indexOf('FAIL') !== -1) span.className = 'fail';
+    else if (s.indexOf('PASS') !== -1) span.className = 'pass';
+    span.textContent = s + '\n';
+    out.appendChild(span);
+  };
+</script>
+<script src="../app.js"></script>
+<script src="run-tests.js"></script>
+</body>
+</html>

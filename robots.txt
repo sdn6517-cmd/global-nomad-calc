@@ -1,0 +1,15 @@
+# Nomad Number Lab — robots.txt
+# Free calculators for location-independent work.
+
+User-agent: *
+Allow: /
+Disallow:
+
+# Google AdSense crawler must be able to read the pages that carry ads.
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+Sitemap: https://sdn6517-cmd.github.io/global-nomad-calc/sitemap.xml
